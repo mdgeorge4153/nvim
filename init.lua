@@ -22,7 +22,7 @@ vim.opt.linebreak = true
 
 -- Gutter
 vim.opt.number = true
-vim.opt.relativenumber = true
+vim.opt.relativenumber = false
 vim.opt.signcolumn = "yes"
 
 -- Scrolling
