@@ -157,7 +157,9 @@ return {
         },
       }
 
-      -- rust_analyzer is configured by rustaceanvim
+      lsp.rust_analyzer.setup {
+        capabilities = capabilities,
+      }
 
       lsp.clangd.setup {
         capabilities = capabilities,
