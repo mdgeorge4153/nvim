@@ -18,7 +18,7 @@ vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
 -- vim.opt.foldtext = "v:lua.vim.treesitter.foldtext()"
 
 -- Word-wrap
-vim.opt.linebreak = true
+vim.opt.linebreak = false
 
 -- Gutter
 vim.opt.number = true
