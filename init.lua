@@ -19,11 +19,17 @@ vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
 
 -- Word-wrap
 vim.opt.linebreak = false
+vim.opt.wrap = false
 
 -- Gutter
 vim.opt.number = true
 vim.opt.relativenumber = false
 vim.opt.signcolumn = "yes"
+
+-- Display
+vim.opt.colorcolumn = "81"
+vim.opt.list = true
+vim.opt.listchars = { tab = "»·", trail = "·" }
 
 -- Scrolling
 vim.opt.scrolloff = 5
@@ -84,6 +90,7 @@ vim.g.mapleader = " "
 vim.g.maplocalleader = ";"
 
 require "config.lazy"
+require "config.digraphs"
 
 -- FIXME fzf live grep hangs on <C-c> -- fixed by neovim/neovim#30056
 
