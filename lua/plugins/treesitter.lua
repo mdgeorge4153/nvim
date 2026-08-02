@@ -51,7 +51,10 @@ return {
         },
 
         modules = {},
-        ignore_install = {},
+        -- Grammars that must be generated from source, which this branch drives
+        -- with a `tree-sitter generate --no-bindings` invocation the current CLI
+        -- rejects. Without this, auto_install errors on every such buffer.
+        ignore_install = { "latex" },
         sync_install = false,
         auto_install = true,
 
