@@ -30,6 +30,7 @@ vim.opt.signcolumn = "yes"
 vim.opt.colorcolumn = "81"
 vim.opt.list = true
 vim.opt.listchars = { tab = "»·", trail = "·" }
+vim.opt.winborder = "rounded"
 
 -- Scrolling
 vim.opt.scrolloff = 5

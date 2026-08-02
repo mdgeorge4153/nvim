@@ -1,8 +1,32 @@
 return {
   {
     "nvim-treesitter/nvim-treesitter",
+    -- Pinned to master: the default branch is now `main`, whose rewrite drops
+    -- the `nvim-treesitter.configs` module this setup call uses. Without this
+    -- the whole config block below throws and none of it takes effect.
+    branch = "master",
     build = ":TSUpdate",
     config = function()
+      -- Registered before `setup`, so that "move" below is a known parser by
+      -- the time `ensure_installed` is processed.
+      --
+      -- Grammar derived from Sui's own, at
+      -- sui/external-crates/move/tooling/tree-sitter. Highlighting also needs
+      -- queries/move/highlights.scm on the runtimepath; nvim-treesitter only
+      -- ships queries for the parsers it knows about, and Move isn't one.
+      local parsers = require("nvim-treesitter.parsers").get_parser_configs()
+      parsers["move"] = {
+        filetype = "move",
+        maintainers = {},
+        install_info = {
+          url = "https://github.com/0xangelo/tree-sitter-move",
+          branch = "main",
+          files = { "src/parser.c" },
+          generate_requires_npm = false, -- if stand-alone parser without npm dependencies
+          requires_generate_from_grammar = false, -- if folder contains pre-generated src/parser.c
+        },
+      }
+
       require("nvim-treesitter.configs").setup {
         ensure_installed = {
           "c",
@@ -16,6 +40,7 @@ return {
           "lua",
           "markdown",
           "markdown_inline",
+          "move",
           "python",
           "rust",
           "scheme",
@@ -33,19 +58,6 @@ return {
         highlight = {
           enable = true,
           disable = { "gitcommit" },
-        },
-      }
-
-      local parsers = require("nvim-treesitter.parsers").get_parser_configs()
-      parsers["move"] = {
-        filetype = "move",
-        maintainers = {},
-        install_info = {
-          url = "~/tree-sitter-move",
-          branch = "main",
-          files = { "src/parser.c" },
-          generate_requires_npm = false, -- if stand-alone parser without npm dependencies
-          requires_generate_from_grammar = false, -- if folder contains pre-generated src/parser.c
         },
       }
     end,

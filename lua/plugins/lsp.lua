@@ -61,43 +61,29 @@ return {
   {
     "neovim/nvim-lspconfig",
     version = "*",
-    events = { "VeryLazy" },
+    -- Loads eagerly on purpose: deferring to VeryLazy can miss the FileType
+    -- event for the buffer nvim was started with, leaving it unattached.
     dependencies = {
       "hrsh7th/cmp-nvim-lsp",
       "williamboman/mason-lspconfig.nvim",
     },
     config = function()
-      local lsp = require "lspconfig"
-      local configs = require "lspconfig.configs"
-      local capabilities = vim.tbl_deep_extend(
-        "force",
-        require("cmp_nvim_lsp").default_capabilities(),
-        {
-          workspace = {
-            didChangeWatchedFiles = {
-              -- Disable workspace/didChangeWatchedFiles. It causes issues in
-              -- large projects, where the file watcher opens too many files.
-              dynamicRegistration = false,
+      -- Defaults merged into every server's configuration.
+      vim.lsp.config("*", {
+        capabilities = vim.tbl_deep_extend(
+          "force",
+          require("cmp_nvim_lsp").default_capabilities(),
+          {
+            workspace = {
+              didChangeWatchedFiles = {
+                -- Disable workspace/didChangeWatchedFiles. It causes issues in
+                -- large projects, where the file watcher opens too many files.
+                dynamicRegistration = false,
+              },
             },
-          },
-        }
-      )
-
-      if not configs.move then
-        configs.move = {
-          default_config = {
-            cmd = { "move-analyzer" },
-            filetypes = { "move" },
-            root_dir = lsp.util.root_pattern "Move.toml",
-          },
-        }
-      end
-
-      -- Render a border around the floating window that shows docs.
-      vim.lsp.handlers["textDocument/hover"] =
-        vim.lsp.with(vim.lsp.handlers.hover, {
-          border = "rounded",
-        })
+          }
+        ),
+      })
 
       -- Ignore server-cancelled diagnostics, which rust-analyzer produces and
       -- neovim doesn't know how to handle (yet).
@@ -112,12 +98,14 @@ return {
         end
       end
 
-      lsp.gopls.setup {
-        capabilities = capabilities,
-      }
+      -- move-analyzer ships no stock configuration, so describe it in full.
+      vim.lsp.config("move", {
+        cmd = { "move-analyzer" },
+        filetypes = { "move" },
+        root_markers = { "Move.toml" },
+      })
 
-      lsp.lua_ls.setup {
-        capabilities = capabilities,
+      vim.lsp.config("lua_ls", {
         on_init = function(client)
           local path = client.workspace_folders[1].name
 
@@ -155,15 +143,9 @@ return {
             hint = { enable = true },
           },
         },
-      }
+      })
 
-      lsp.rust_analyzer.setup {
-        capabilities = capabilities,
-      }
-
-      lsp.clangd.setup {
-        capabilities = capabilities,
-
+      vim.lsp.config("clangd", {
         settings = {
           clangd = {
             InlayHints = {
@@ -174,7 +156,7 @@ return {
             },
           },
         },
-      }
+      })
 
       local ts_hints = {
         includeInlayParameterNameHints = "all",
@@ -187,8 +169,7 @@ return {
         includeInlayEnumMemberValueHints = true,
       }
 
-      lsp.ts_ls.setup {
-        capabilities = capabilities,
+      vim.lsp.config("ts_ls", {
         settings = {
           typescript = {
             inlayHints = ts_hints,
@@ -197,10 +178,17 @@ return {
             inlayHints = ts_hints,
           },
         },
-      }
+      })
 
-      lsp.move.setup {
-        capabilities = capabilities,
+      -- Register FileType autocmds that start each server on demand. Servers
+      -- needing no overrides (gopls, rust_analyzer) only appear here.
+      vim.lsp.enable {
+        "clangd",
+        "gopls",
+        "lua_ls",
+        "move",
+        "rust_analyzer",
+        "ts_ls",
       }
     end,
   },
