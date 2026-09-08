@@ -1,3 +1,8 @@
+-- Mouse: disabled. Neovim 0.11+ defaults `mouse` to "nvi" (capture on in
+-- normal/visual/insert), which grabs the scroll wheel into buffer-scrolling
+-- instead of letting it pass through to terminal/tmux scrollback.
+vim.opt.mouse = ""
+
 -- Search
 vim.opt.smartcase = true
 vim.opt.ignorecase = true

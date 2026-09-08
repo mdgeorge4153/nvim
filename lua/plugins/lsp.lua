@@ -184,7 +184,6 @@ return {
       -- needing no overrides (gopls, rust_analyzer) only appear here.
       vim.lsp.enable {
         "clangd",
-        "gopls",
         "lua_ls",
         "move",
         "rust_analyzer",
@@ -204,8 +203,6 @@ return {
       formatters_by_ft = {
         c = { "clang-format" },
         cpp = { "clang-format" },
-        clojure = { "cljfmt" },
-        go = { "gofmt" },
         javascript = { "prettier" },
         lua = { "stylua" },
         move = { "prettier-move" },
@@ -218,11 +215,6 @@ return {
         lsp_format = "fallback",
       },
       formatters = {
-        cljfmt = {
-          command = "cljfmt",
-          args = { "fix", "$FILENAME" },
-          stdin = false,
-        },
         ["prettier-move"] = {
           command = "prettier-move",
           args = { "--stdin-filepath", "$FILENAME" },

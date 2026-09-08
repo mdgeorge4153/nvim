@@ -27,13 +27,8 @@ return {
     config = function()
       require("nvim-treesitter").install {
         "c",
-        "clojure",
-        "fennel",
         "fish",
         "graphql",
-        "go",
-        "gomod",
-        "gowork",
         "latex",
         "lua",
         "markdown",
@@ -41,7 +36,6 @@ return {
         "move",
         "python",
         "rust",
-        "scheme",
         "sql",
         "tsx",
         "typescript",
